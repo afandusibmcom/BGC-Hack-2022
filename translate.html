@@ -1,0 +1,56 @@
+<html>
+<script>
+
+    function translateToSpanish() {
+        // disable default action
+        event.preventDefault()
+
+        var form = document.forms[0];
+        var selectElement = form.querySelector('#engText');
+        var engText = selectElement.value;
+
+        // configure a request
+        const xhr = new XMLHttpRequest()
+        var url = "https://api.us-south.language-translator.watson.cloud.ibm.com/instances/65701f98-bc6c-4cff-8391-e967fda18d62";
+        url += "/v3/translate?version=2018-05-01";
+
+        xhr.open('POST', url)
+    
+        const engElement = document.getElementById("engText");
+
+        // prepare form data
+        let data = {
+            "text": [ engText ],
+            "model_id": "en-es"
+        };
+
+        // set headers
+        xhr.setRequestHeader('Content-Type', 'application/json')
+        xhr.setRequestHeader('authorization', 'Basic YXBpa2V5OmgtcmZtYlF6cHZyM1liYVlEMEtLYmE1d3B3eHluMnRDVS1EX1lFUjRWcm5F')
+
+        // send request
+        xhr.send(JSON.stringify(data))
+
+        // listen for `load` event
+        xhr.onload = () => {
+            var resp = JSON.parse(xhr.responseText) ;
+            const spanishText = resp.translations[0].translation;
+            const spanishElement = document.getElementById("spanishText");
+            spanishElement.innerHTML = spanishText;
+        }
+    }
+
+</script>
+    <body>
+        <h1> Welcome to BGC Hack 2022!</h1>
+
+            <form onsubmit="return translateToSpanish()">
+                Enter English here: <input id="engText" type="text"> <br>
+                <input type="hidden" name="s" value="en-fr">
+                <button type="submit" role="button">Submit</button>
+            </form>
+            <br>
+            translates into Spanish as <h3><span id="spanishText"></span></h3>
+
+    </body>
+</html>
